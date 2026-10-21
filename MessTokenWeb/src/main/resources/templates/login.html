@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Mess Token System</title>
+        <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
+        <span>Mess Token System</span>
+    </div>
+</header>
+<div class="form-wrap">
+    <div class="card">
+        <h2>Login</h2>
+        <form action="/login" method="post">
+            <label>Roll No</label>
+            <input type="text" name="rollNo" required>
+            <label>Password</label>
+            <input type="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p class="success" th:if="${message}" th:text="${message}"></p>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
+        <p class="link">New here? <a href="/signup">Sign Up</a></p>
+    </div>
+</div>
+</body>
+</html>

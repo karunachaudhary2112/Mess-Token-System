@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mess Dashboard - Mess Token System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="dark">
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
+        <span>Mess Dashboard — Mess ID: <span th:text="${messId}"></span></span>
+    </div>
+    <a href="/mess-login">Logout</a>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Today's Preorder Summary</h2>
+        <p>Total registered students in this mess: <b th:text="${totalStudents}"></b></p>
+        <table>
+            <tr>
+                <th>Meal</th>
+                <th>Skipped (won't eat)</th>
+                <th>Expected to Eat</th>
+            </tr>
+            <tr th:each="meal : ${skipCounts}">
+                <td th:text="${meal.key}"></td>
+                <td class="skipped" th:text="${meal.value}"></td>
+                <td class="expected" th:text="${totalStudents - meal.value}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

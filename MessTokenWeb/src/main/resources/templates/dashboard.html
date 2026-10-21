@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Mess Token System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
+        <span>Mess Token System</span>
+    </div>
+    <a href="/login">Logout</a>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2 th:text="'Welcome, ' + ${student.name}">Welcome</h2>
+        <div class="balance-row"><span>Total Tokens</span><span th:text="${student.totalBalance} + ' tokens'"></span></div>
+        <div class="balance-row"><span>Monthly Limit</span><span th:text="${student.monthlyLimit} + ' tokens/month'"></span></div>
+        <div class="balance-row"><span>Monthly Used</span><span th:text="${student.monthlyUsed} + ' tokens'"></span></div>
+    </div>
+
+    <div class="card">
+        <h2>Pay Yearly Fees</h2>
+        <form action="/dashboard/payfees" method="post">
+            <input type="hidden" name="id" th:value="${student.id}">
+            <label>Yearly Fee (₹) — will convert to Tokens</label>
+            <input type="number" step="0.01" name="yearlyFee" required>
+            <button type="submit">Pay Fees</button>
+        </form>
+    </div>
+
+    <div class="actions">
+        <a th:href="'/scan?id=' + ${student.id}">Scan & Pay</a>
+        <a th:href="'/history?id=' + ${student.id}">Transaction History</a>
+        <a th:href="'/preorder?id=' + ${student.id}">Preorder Meals</a>
+    </div>
+</div>
+</body>
+</html>

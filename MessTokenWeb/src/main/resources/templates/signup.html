@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Signup - Mess Token System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
+        <span>Mess Token System</span>
+    </div>
+</header>
+<div class="form-wrap">
+    <div class="card">
+        <h2>Student Sign Up</h2>
+        <form action="/signup" method="post">
+            <label>Full Name</label>
+            <input type="text" name="name" required>
+            <label>Roll No</label>
+            <input type="text" name="rollNo" required>
+            <label>Hostel ID</label>
+            <input type="number" name="hostelId" required>
+            <label>Assigned Mess ID</label>
+            <input type="number" name="messId" required>
+            <label>Password</label>
+            <input type="password" name="password" required>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
+        <p class="link">Already have an account? <a href="/login">Login</a></p>
+    </div>
+</div>
+</body>
+</html>

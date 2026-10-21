@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Preorder - Mess Token System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
+        <span>Preorder — Mark Meals You'll Skip</span>
+    </div>
+    <a th:href="'/dashboard?id=' + ${student.id}">Back to Dashboard</a>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Today's Meals</h2>
+        <p>Check the meals you will NOT eat today, so the mess can cook accordingly. Unchecked meals mean you plan to eat.</p>
+        <form action="/preorder" method="post">
+            <input type="hidden" name="id" th:value="${student.id}">
+
+            <div class="meal-option">
+                <input type="checkbox" id="b" name="skipMeals" value="Breakfast"
+                       th:checked="${student.skippedMealsToday.contains('Breakfast')}">
+                <label for="b">Skip Breakfast</label>
+            </div>
+            <div class="meal-option">
+                <input type="checkbox" id="l" name="skipMeals" value="Lunch"
+                       th:checked="${student.skippedMealsToday.contains('Lunch')}">
+                <label for="l">Skip Lunch</label>
+            </div>
+            <div class="meal-option">
+                <input type="checkbox" id="d" name="skipMeals" value="Dinner"
+                       th:checked="${student.skippedMealsToday.contains('Dinner')}">
+                <label for="d">Skip Dinner</label>
+            </div>
+
+            <button type="submit">Submit Preferences</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

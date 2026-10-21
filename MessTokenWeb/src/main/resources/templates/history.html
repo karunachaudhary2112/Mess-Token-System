@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction History - Mess Token System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
+        <span>Transaction History</span>
+    </div>
+    <a th:href="'/dashboard?id=' + ${student.id}">Back to Dashboard</a>
+</header>
+<div class="container">
+    <div class="card">
+        <h2 th:text="${student.name} + '\'s Transactions'">Transactions</h2>
+        <div th:if="${student.history.isEmpty()}" class="empty">No transactions yet.</div>
+        <div class="entry" th:each="h : ${student.history}" th:text="${h}"></div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scan & Pay - Mess Token System</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        .scan-box { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        #qrcode { background: white; padding: 10px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+<header>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
+        <span>Scan & Pay</span>
+    </div>
+    <a th:href="'/dashboard?id=' + ${student.id}">Back to Dashboard</a>
+</header>
+
+<div class="container">
+    <div class="card">
+        <div class="scan-box">
+            <div id="qrcode"></div>
+            <span>Student ID: <span th:text="${student.id}"></span></span>
+        </div>
+        <form action="/scan" method="post">
+            <input type="hidden" name="id" th:value="${student.id}">
+            <label>Mess ID (this counter)</label>
+            <input type="number" name="messId" required>
+            <label>Meal Type</label>
+            <select name="mealType">
+                <option>Breakfast</option>
+                <option>Lunch</option>
+                <option>Dinner</option>
+                <option>Snack / Purchase</option>
+            </select>
+            <label>Amount (tokens)</label>
+            <input type="number" step="0.01" name="amount" required>
+            <label>Enter Password</label>
+            <input type="password" name="password" required>
+            <button type="submit">Confirm Payment</button>
+        </form>
+        <div class="result ok" th:if="${result != null and !result.startsWith('Failed')}" th:text="${result}"></div>
+        <div class="result fail" th:if="${result != null and result.startsWith('Failed')}" th:text="${result}"></div>
+        <a class="back" th:href="'/dashboard?id=' + ${student.id}">← Dashboard</a>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const studentId = /*[[${student.id}]]*/ '0';
+    new QRCode(document.getElementById("qrcode"), {
+        text: "STUDENT-" + studentId,
+        width: 140,
+        height: 140,
+        colorDark: "#163c2b",
+        colorLight: "#ffffff"
+    });
+</script>
+</body>
+</html>

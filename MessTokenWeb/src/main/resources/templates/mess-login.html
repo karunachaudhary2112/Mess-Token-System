@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mess Staff Login - Mess Token System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="dark">
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
+        <span>Mess Staff Login</span>
+    </div>
+</header>
+<div class="form-wrap">
+    <div class="card">
+        <h2>Staff Login</h2>
+        <form action="/mess-login" method="post">
+            <label>Mess ID</label>
+            <input type="number" name="messId" required>
+            <label>Staff Password</label>
+            <input type="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
+        <p class="link"><a href="/">← Back to Home</a></p>
+    </div>
+</div>
+</body>
+</html>
