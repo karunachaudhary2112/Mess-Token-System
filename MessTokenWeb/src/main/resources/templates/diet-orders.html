@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Orders | Mess Token System</title>
+    <link rel="stylesheet" href="/style.css">
+
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .heading {
+            margin-bottom: 30px;
+        }
+
+        .heading p {
+            color: #777;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+        }
+
+        .food-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+
+        .food-icon {
+            font-size: 42px;
+        }
+
+        .food-card p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #198754;
+            margin: 16px 0;
+        }
+
+        .stock {
+            display: inline-block;
+            background: #eaf7ef;
+            color: #198754;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .order-btn {
+            width: 100%;
+            padding: 12px;
+            background: #198754;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .order-btn:hover {
+            background: #146c43;
+        }
+
+        .notice {
+            background: #fff8e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 25px;
+            color: #765b17;
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+
+<body>
+<p th:if="${result != null}"
+   th:text="${result}"
+   style="padding:12px; background:#e8f5e9; border-radius:8px; font-weight:bold;">
+</p>
+
+<header>
+    <div style="display:flex;align-items:center;gap:12px;">
+        <img src="/logo.png" alt="Mess Token System logo"
+             style="height:42px;border-radius:8px;">
+        <span>Diet Orders</span>
+    </div>
+
+    <a th:href="@{/dashboard(id=${student.id})}">
+        Back to Dashboard
+    </a>
+
+</header>
+
+<main class="container">
+
+    <div class="heading">
+        <h1>🥗 Healthy Food Orders</h1>
+        <p>Choose a healthy snack. Daily quantities will be limited.</p>
+    </div>
+
+    <div class="food-grid">
+
+        <div class="food-card">
+            <div class="food-icon">🥗</div>
+            <h2>Sprouts Salad</h2>
+            <p>Fresh sprouts packed with nutrients.</p>
+            <div class="price">₹65</div>
+            <div class="stock">Limited daily stock</div>
+
+            <form th:action="@{/diet-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Sprouts Salad">
+                <button type="submit" class="order-btn">Order Now</button>
+            </form>
+        </div>
+
+        <div class="food-card">
+            <div class="food-icon">🍎</div>
+            <h2>Fruit Bowl</h2>
+            <p>A refreshing bowl of seasonal fruits.</p>
+            <div class="price">₹90</div>
+            <div class="stock">Limited daily stock</div>
+
+            <form th:action="@{/diet-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Fruit Bowl">
+                <button type="submit" class="order-btn">Order Now</button>
+            </form>
+        </div>
+
+        <div class="food-card">
+            <div class="food-icon">🥣</div>
+            <h2>Oats</h2>
+            <p>A simple and filling bowl of oats.</p>
+            <div class="price">₹75</div>
+            <div class="stock">Limited daily stock</div>
+
+            <form th:action="@{/diet-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Oats">
+                <button type="submit" class="order-btn">Order Now</button>
+            </form>
+        </div>
+
+        <div class="food-card">
+            <div class="food-icon">🥚</div>
+            <h2>Boiled Eggs</h2>
+            <p>A protein-rich snack for your daily routine.</p>
+            <div class="price">₹50</div>
+            <div class="stock">Limited daily stock</div>
+
+            <form th:action="@{/diet-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Boiled Eggs">
+                <button type="submit" class="order-btn">Order Now</button>
+            </form>
+        </div>
+
+        <div class="food-card">
+            <div class="food-icon">🥙</div>
+            <h2>Paneer Salad</h2>
+            <p>Paneer served with fresh vegetables.</p>
+            <div class="price">₹100</div>
+            <div class="stock">Limited daily stock</div>
+
+            <form th:action="@{/diet-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Paneer Salad">
+                <button type="submit" class="order-btn">Order Now</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="notice">
+        ⚠️ Orders depend on stock availability and meal eligibility.
+        Payment and stock management will be connected through the backend.
+    </div>
+
+</main>
+
+</body>
+</html>

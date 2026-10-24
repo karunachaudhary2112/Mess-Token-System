@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class StudentController {
+    @Autowired
+    private MenuService menuService;
 
     @Autowired
     private StudentService studentService;
@@ -78,6 +80,12 @@ public class StudentController {
         Student student = studentService.findById(id);
         if (student == null) return "redirect:/login";
         model.addAttribute("student", student);
+        model.addAttribute("breakfastPrice",
+                menuService.getMealPrice(menuService.getTodayName(), "Breakfast"));
+        model.addAttribute("lunchPrice",
+                menuService.getMealPrice(menuService.getTodayName(), "Lunch"));
+        model.addAttribute("dinnerPrice",
+                menuService.getMealPrice(menuService.getTodayName(), "Dinner"));
         return "scan";
     }
 
@@ -89,7 +97,17 @@ public class StudentController {
                               @RequestParam String password,
                               Model model) {
 
-        String result = studentService.debit(id, messId, amount, mealType, password);
+        double actualAmount = menuService.getMealPrice(
+                menuService.getTodayName(), mealType);
+
+        String result;
+
+        if (actualAmount <= 0) {
+            result = "Failed: Invalid meal or price not found.";
+        } else {
+            result = studentService.debit(
+                    id, messId, actualAmount, mealType, password);
+        }
         Student student = studentService.findById(id);
         model.addAttribute("student", student);
         model.addAttribute("result", result);
@@ -122,4 +140,38 @@ public class StudentController {
         studentService.setPreorder(id, skipped);
         return "redirect:/dashboard?id=" + id;
     }
+    @GetMapping("/special-orders")
+    public String specialOrders(@RequestParam int id, Model model) {
+        model.addAttribute("student", studentService.findById(id));
+        return "special-orders";
+    }
+
+    @GetMapping("/diet-orders")
+    public String dietOrders(@RequestParam int id, Model model) {
+        model.addAttribute("student", studentService.findById(id));
+        return "diet-orders";
+    }
+
+    @PostMapping("/special-orders")
+    public String placeSpecialOrder(@RequestParam int id,
+                                    @RequestParam String food,
+                                    Model model) {
+        String result = studentService.placeOrder(id, food, "special");
+        Student student = studentService.findById(id);
+        model.addAttribute("student", student);
+        model.addAttribute("result", result);
+        return "special-orders";
+    }
+
+    @PostMapping("/diet-orders")
+    public String placeDietOrder(@RequestParam int id,
+                                 @RequestParam String food,
+                                 Model model) {
+        String result = studentService.placeOrder(id, food, "diet");
+        Student student = studentService.findById(id);
+        model.addAttribute("student", student);
+        model.addAttribute("result", result);
+        return "diet-orders";
+    }
+
 }

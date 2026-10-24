@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Today's Menu - Mess Token System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f3f6f4;
+            color: #1a1a1a;
+        }
+
+        /* Header */
+
+        header {
+            background: #2e7d5a;
+            color: white;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-height: 76px;
+        }
+
+        .hamburger-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 27px;
+            cursor: pointer;
+            padding: 5px 8px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .brand img {
+            height: 42px;
+            width: 42px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .profile-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e67e22;
+            color: white;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Sidebar */
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 10;
+        }
+
+        .overlay.open {
+            display: block;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 270px;
+            height: 100%;
+            background: #163c2b;
+            z-index: 20;
+            transition: left 0.25s ease;
+            padding-top: 20px;
+        }
+
+        .side-menu.open {
+            left: 0;
+        }
+
+        .side-menu h3 {
+            color: white;
+            padding: 0 24px;
+            margin: 0 0 20px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .side-menu a {
+            display: block;
+            padding: 14px 24px;
+            color: #cfe3d7;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .side-menu a:hover,
+        .side-menu a.active {
+            background: #1e5f41;
+            color: white;
+        }
+
+        /* Profile dropdown */
+
+        .profile-card {
+            display: none;
+            position: absolute;
+            top: 84px;
+            right: 20px;
+            width: 260px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            z-index: 30;
+        }
+
+        .profile-card.open {
+            display: block;
+        }
+
+        .profile-card p {
+            font-size: 14px;
+            margin: 10px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-card a {
+            display: block;
+            text-align: center;
+            background: #c0392b;
+            color: white;
+            padding: 10px;
+            margin-top: 16px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        /* Main content */
+
+        .container {
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 24px 40px;
+        }
+
+        .page-heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-heading h1 {
+            color: #1e5f41;
+            font-size: 34px;
+            margin: 0 0 10px;
+        }
+
+        .page-heading p {
+            color: #666;
+            font-size: 15px;
+            margin: 0;
+        }
+
+        /* Day selector */
+
+        .day-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .day-section label {
+            display: block;
+            font-weight: 600;
+            color: #1e5f41;
+            margin-bottom: 8px;
+        }
+
+        .day-section select {
+            width: 260px;
+            max-width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            background: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .today-badge {
+            background: #e0eee6;
+            color: #1e5f41;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Highlight section */
+
+        .special-banner {
+            background: #1e5f41;
+            color: white;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-bottom: 30px;
+        }
+
+        .special-banner h2 {
+            font-size: 20px;
+            margin: 0 0 7px;
+        }
+
+        .special-banner p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e2f0e7;
+        }
+
+        /* Meal cards */
+
+        .meal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .meal-card {
+            background: white;
+            border-radius: 12px;
+            padding: 26px 22px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+            border-top: 5px solid #2e7d5a;
+            display: flex;
+            flex-direction: column;
+            min-height: 280px;
+        }
+
+        .meal-icon {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .meal-card h2 {
+            text-align: center;
+            color: #1e5f41;
+            font-size: 23px;
+            margin: 0 0 7px;
+        }
+
+        .meal-time {
+            text-align: center;
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e5e5;
+            margin: 0 0 18px;
+        }
+
+        .meal-description {
+            font-size: 15px;
+            line-height: 1.9;
+            color: #333;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            flex: 1;
+        }
+
+        .meal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .token-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .price-tag {
+            background: #e0eee6;
+            color: #1e5f41;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .empty-message {
+            background: white;
+            padding: 28px;
+            border-radius: 10px;
+            text-align: center;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+
+        .page-footer {
+            text-align: center;
+            color: #777;
+            font-size: 13px;
+            margin-top: 35px;
+        }
+
+        /* Responsive layout */
+
+        @media (max-width: 850px) {
+            .meal-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            header {
+                padding: 12px;
+            }
+
+            .brand {
+                font-size: 17px;
+                gap: 8px;
+            }
+
+            .brand img {
+                width: 34px;
+                height: 34px;
+            }
+
+            .container {
+                margin-top: 25px;
+                padding: 0 14px 30px;
+            }
+
+            .page-heading h1 {
+                font-size: 27px;
+            }
+
+            .meal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .day-section select {
+                width: 100%;
+            }
+
+            .day-section > div:first-child {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <button class="hamburger-btn"
+            type="button"
+            aria-label="Open menu"
+            onclick="toggleMenu(true)">☰</button>
+
+    <div class="brand">
+        <img src="/logo.png" alt="Mess logo"
+             onerror="this.style.display='none'">
+        <span>Mess Token System</span>
+    </div>
+
+    <button class="profile-btn"
+            type="button"
+            aria-label="Student profile"
+            th:text="${#strings.substring(student.name, 0, 1)}"
+            onclick="toggleProfile()">K</button>
+
+</header>
+
+<!-- Sidebar overlay -->
+
+<div class="overlay"
+     id="overlay"
+     onclick="toggleMenu(false)"></div>
+
+<!-- Sidebar -->
+
+<nav class="side-menu" id="sideMenu">
+
+    <button class="close-btn"
+            type="button"
+            aria-label="Close menu"
+            onclick="toggleMenu(false)">✕</button>
+
+    <h3>Menu</h3>
+
+    <a th:href="@{/dashboard(id=${student.id})}">
+        🏠 Dashboard
+    </a>
+
+    <a th:href="@{/scan(id=${student.id})}">
+        📷 Scan &amp; Pay
+    </a>
+
+    <a th:href="@{/history(id=${student.id})}">
+        📜 Transaction History
+    </a>
+
+    <a th:href="@{/preorder(id=${student.id})}">
+        🍽️ Preorder Meals
+    </a>
+
+    <a class="active"
+       th:href="@{/menu(id=${student.id})}">
+        📋 Today's Menu
+    </a>
+
+    <a href="/login">🚪 Logout</a>
+
+</nav>
+
+<!-- Student profile -->
+
+<div class="profile-card" id="profileCard">
+
+    <p>
+        <b>Name:</b>
+        <span th:text="${student.name}"></span>
+    </p>
+
+    <p>
+        <b>Roll No:</b>
+        <span th:text="${student.rollNo}"></span>
+    </p>
+
+    <p>
+        <b>Hostel ID:</b>
+        <span th:text="${student.hostelId}"></span>
+    </p>
+
+    <p>
+        <b>Mess ID:</b>
+        <span th:text="${student.messId}"></span>
+    </p>
+
+    <a href="/login">Logout</a>
+
+</div>
+
+<!-- Main page -->
+
+<main class="container">
+
+    <div class="page-heading">
+        <h1>🍽️ Today's Mess Menu</h1>
+        <p>Eat what makes Your SOUL Happy .</p>
+    </div>
+
+    <!-- Select a day -->
+
+    <form action="/menu"
+          method="get"
+          class="day-section">
+
+        <input type="hidden"
+               name="id"
+               th:value="${student.id}">
+
+        <div>
+            <label for="day">Choose a day</label>
+
+            <select id="day"
+                    name="day"
+                    onchange="this.form.submit()">
+
+                <option value="MONDAY"
+                        th:selected="${selectedDay == 'MONDAY'}">
+                    Monday
+                </option>
+
+                <option value="TUESDAY"
+                        th:selected="${selectedDay == 'TUESDAY'}">
+                    Tuesday
+                </option>
+
+                <option value="WEDNESDAY"
+                        th:selected="${selectedDay == 'WEDNESDAY'}">
+                    Wednesday
+                </option>
+
+                <option value="THURSDAY"
+                        th:selected="${selectedDay == 'THURSDAY'}">
+                    Thursday
+                </option>
+
+                <option value="FRIDAY"
+                        th:selected="${selectedDay == 'FRIDAY'}">
+                    Friday
+                </option>
+
+                <option value="SATURDAY"
+                        th:selected="${selectedDay == 'SATURDAY'}">
+                    Saturday
+                </option>
+
+                <option value="SUNDAY"
+                        th:selected="${selectedDay == 'SUNDAY'}">
+                    Sunday
+                </option>
+
+            </select>
+        </div>
+
+        <div class="today-badge"
+             th:if="${selectedDay == todayName}">
+            📅 Today's Menu
+        </div>
+
+        <div class="today-badge"
+             th:unless="${selectedDay == todayName}"
+             th:text="${#strings.capitalize(#strings.toLowerCase(selectedDay))} + ' Menu'">
+            Selected Day Menu
+        </div>
+
+    </form>
+
+    <!-- Highlight -->
+
+    <section class="special-banner">
+
+        <h2>🌿 Your Daily Meal Plan</h2>
+
+        <p>
+            Check the dishes and token prices before your meal.
+            Choose another day from the dropdown to view its menu.
+        </p>
+
+    </section>
+
+    <!-- Meal cards -->
+
+    <section class="meal-grid">
+
+        <div class="meal-card"
+             th:each="m : ${menuItems}">
+
+            <div class="meal-icon"
+                 th:switch="${m.mealType}">
+
+                <span th:case="'Breakfast'">🌅</span>
+                <span th:case="'Lunch'">☀️</span>
+                <span th:case="'Dinner'">🌙</span>
+                <span th:case="*">🍽️</span>
+
+            </div>
+
+            <h2 th:text="${m.mealType}">Breakfast</h2>
+
+            <div class="meal-time"
+                 th:switch="${m.mealType}">
+
+                <span th:case="'Breakfast'">8:00 AM – 10:00 AM</span>
+                <span th:case="'Lunch'">12:00 PM – 2:00 PM</span>
+                <span th:case="'Dinner'">7:00 PM – 9:00 PM</span>
+                <span th:case="*">Check mess timings</span>
+
+            </div>
+
+            <hr class="divider">
+
+            <div class="meal-description"
+                 th:text="${m.itemsDescription}">
+                Poha, Tea
+            </div>
+
+            <div class="meal-footer">
+
+                <span class="token-label">Meal cost</span>
+
+                <span class="price-tag"
+                      th:text="${#numbers.formatDecimal(m.tokenPrice, 1, 2)} + ' tokens'">
+                    60.00 tokens
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="empty-message"
+             th:if="${#lists.isEmpty(menuItems)}">
+
+            <h3>Menu not available</h3>
+
+            <p>
+                No menu has been added for this day yet.
+                Please check with your mess.
+            </p>
+
+        </div>
+
+    </section>
+
+    <div class="page-footer">
+        Please follow mess rules and enjoy your food! 💚
+    </div>
+
+</main>
+
+<script>
+    function toggleMenu(open) {
+        document.getElementById('sideMenu')
+            .classList.toggle('open', open);
+
+        document.getElementById('overlay')
+            .classList.toggle('open', open);
+    }
+
+    function toggleProfile() {
+        document.getElementById('profileCard')
+            .classList.toggle('open');
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            toggleMenu(false);
+
+            document.getElementById('profileCard')
+                .classList.remove('open');
+        }
+    });
+</script>
+
+</body>
+</html>

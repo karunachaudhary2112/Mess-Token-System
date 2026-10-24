@@ -1,36 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Mess Dashboard - Mess Token System</title>
-    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mess Dashboard</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f1f6f2;
+            color: #193c2d;
+        }
+
+        header {
+            background: linear-gradient(120deg, #123c2b, #2e7d5a);
+            color: white;
+            padding: 20px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header h2 { margin: 0; font-size: 22px; }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            background: #ffffff20;
+            padding: 9px 16px;
+            border-radius: 8px;
+        }
+
+        main {
+            max-width: 950px;
+            margin: 35px auto;
+            padding: 0 18px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h1 { margin-bottom: 8px; }
+
+        .welcome p { color: #718078; }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px #193c2d0c;
+            border-top: 4px solid #2e7d5a;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            color: #718078;
+            margin-top: 0;
+        }
+
+        .number {
+            font-size: 38px;
+            font-weight: bold;
+            margin: 12px 0;
+        }
+
+        .skip { border-color: #d97757; }
+        .eat { border-color: #2e7d5a; }
+
+        .meal-title {
+            margin: 32px 0 18px;
+        }
+
+        .meal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .meal {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px #193c2d0c;
+        }
+
+        .meal h3 { margin-top: 0; }
+
+        .meal p { color: #718078; }
+
+        .meal strong {
+            display: block;
+            font-size: 28px;
+            margin-top: 12px;
+        }
+
+        .empty {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        @media(max-width: 650px) {
+            .summary, .meal-grid { grid-template-columns: 1fr; }
+            header h2 { font-size: 18px; }
+            .number { font-size: 32px; }
+        }
+    </style>
+
 </head>
+
 <body>
-<header class="dark">
-    <div style="display:flex; align-items:center; gap:12px;">
-        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
-        <span>Mess Dashboard — Mess ID: <span th:text="${messId}"></span></span>
-    </div>
+
+<header>
+    <h2>🍽️ Mess Dashboard</h2>
     <a href="/mess-login">Logout</a>
 </header>
 
-<div class="container">
-    <div class="card">
-        <h2>Today's Preorder Summary</h2>
-        <p>Total registered students in this mess: <b th:text="${totalStudents}"></b></p>
-        <table>
-            <tr>
-                <th>Meal</th>
-                <th>Skipped (won't eat)</th>
-                <th>Expected to Eat</th>
-            </tr>
-            <tr th:each="meal : ${skipCounts}">
-                <td th:text="${meal.key}"></td>
-                <td class="skipped" th:text="${meal.value}"></td>
-                <td class="expected" th:text="${totalStudents - meal.value}"></td>
-            </tr>
-        </table>
-    </div>
-</div>
+<main>
+    <section class="welcome">
+        <h1>Today's Meal Summary</h1>
+        <p>Mess ID: <b th:text="${messId}"></b> | Check today's expected meal count.</p>
+    </section>
+
+    <section class="summary">
+        <div class="card">
+            <h3>👥 Total Students</h3>
+            <div class="number" th:text="${totalStudents}">0</div>
+        </div>
+
+        <div class="card skip">
+            <h3>🚫 Skipping Meals</h3>
+            <div class="number"
+                 th:text="${skipCounts['Breakfast'] + skipCounts['Lunch'] + skipCounts['Dinner']}">0</div>
+            <p>Total meal skips</p>
+        </div>
+
+        <div class="card eat">
+            <h3>🍛 Expected Meals</h3>
+            <div class="number"
+                 th:text="${(totalStudents * 3) - (skipCounts['Breakfast'] + skipCounts['Lunch'] + skipCounts['Dinner'])}">0</div>
+            <p>Expected meals for today</p>
+        </div>
+    </section>
+
+    <h2 class="meal-title">Meal-wise Details</h2>
+
+    <section class="meal-grid">
+        <div class="meal">
+            <h3>🌅 Breakfast</h3>
+            <p>Skipping</p>
+            <strong th:text="${skipCounts['Breakfast']}">0</strong>
+            <p>Expected to eat</p>
+            <strong th:text="${totalStudents - skipCounts['Breakfast']}">0</strong>
+        </div>
+
+        <div class="meal">
+            <h3>☀️ Lunch</h3>
+            <p>Skipping</p>
+            <strong th:text="${skipCounts['Lunch']}">0</strong>
+            <p>Expected to eat</p>
+            <strong th:text="${totalStudents - skipCounts['Lunch']}">0</strong>
+        </div>
+
+        <div class="meal">
+            <h3>🌙 Dinner</h3>
+            <p>Skipping</p>
+            <strong th:text="${skipCounts['Dinner']}">0</strong>
+            <p>Expected to eat</p>
+            <strong th:text="${totalStudents - skipCounts['Dinner']}">0</strong>
+        </div>
+    </section>
+
+</main>
+
 </body>
 </html>

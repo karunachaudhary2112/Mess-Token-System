@@ -1,62 +1,172 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scan & Pay - Mess Token System</title>
     <link rel="stylesheet" href="/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <style>
-        .scan-box { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-        #qrcode { background: white; padding: 10px; border-radius: 8px; }
+        .scan-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding: 25px;
+            background: #153d2d;
+            color: white;
+            border-radius: 16px;
+        }
+
+        #qrcode {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .payment-form label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: 600;
+        }
+
+        .payment-form input,
+        .payment-form select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce5de;
+            border-radius: 9px;
+            background: white;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .payment-form input[readonly] {
+            background: #edf5ef;
+            color: #176747;
+            font-weight: bold;
+        }
+
+        .payment-form button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            background: #176747;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .payment-form button:hover {
+            background: #124b34;
+        }
+
+        .price-note {
+            color: #718078;
+            font-size: 12px;
+            margin-top: 5px;
+        }
     </style>
+
 </head>
+
 <body>
+
 <header>
     <div style="display:flex; align-items:center; gap:12px;">
         <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
         <span>Scan & Pay</span>
     </div>
-    <a th:href="'/dashboard?id=' + ${student.id}">Back to Dashboard</a>
+    <a th:href="@{/dashboard(id=${student.id})}">Back to Dashboard</a>
 </header>
 
 <div class="container">
     <div class="card">
+
         <div class="scan-box">
             <div id="qrcode"></div>
-            <span>Student ID: <span th:text="${student.id}"></span></span>
+            <span>Student ID: <strong th:text="${student.id}"></strong></span>
+            <span>Scan & Pay Securely</span>
         </div>
-        <form action="/scan" method="post">
+
+        <form action="/scan" method="post" class="payment-form">
+
             <input type="hidden" name="id" th:value="${student.id}">
-            <label>Mess ID (this counter)</label>
-            <input type="number" name="messId" required>
-            <label>Meal Type</label>
-            <select name="mealType">
-                <option>Breakfast</option>
-                <option>Lunch</option>
-                <option>Dinner</option>
-                <option>Snack / Purchase</option>
+
+            <label>Mess ID</label>
+            <select name="messId" required>
+                <option value="" disabled selected>Select Mess ID</option>
+                <option th:each="mess : ${#numbers.sequence(1,7)}"
+                        th:value="${mess}"
+                        th:text="'Mess ' + ${mess}">
+                </option>
             </select>
-            <label>Amount (tokens)</label>
-            <input type="number" step="0.01" name="amount" required>
+
+            <label>Meal Type</label>
+            <select name="mealType" id="mealType" required>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+            </select>
+
+            <label>Meal Price (tokens)</label>
+            <input type="number" id="amount" name="amount"
+                   th:value="${breakfastPrice}" readonly required>
+            <div class="price-note">Price is automatically selected according to the meal.</div>
+
             <label>Enter Password</label>
             <input type="password" name="password" required>
+
             <button type="submit">Confirm Payment</button>
         </form>
-        <div class="result ok" th:if="${result != null and !result.startsWith('Failed')}" th:text="${result}"></div>
-        <div class="result fail" th:if="${result != null and result.startsWith('Failed')}" th:text="${result}"></div>
-        <a class="back" th:href="'/dashboard?id=' + ${student.id}">← Dashboard</a>
+
+        <div class="result ok"
+             th:if="${result != null and !result.startsWith('Failed')}"
+             th:text="${result}"></div>
+
+        <div class="result fail"
+             th:if="${result != null and result.startsWith('Failed')}"
+             th:text="${result}"></div>
+
+        <a class="back" th:href="@{/dashboard(id=${student.id})}">← Dashboard</a>
+
     </div>
+
 </div>
 
 <script th:inline="javascript">
-    const studentId = /*[[${student.id}]]*/ '0';
+    const prices = {
+        Breakfast: Number(/*[[${breakfastPrice}]]*/ 60),
+        Lunch: Number(/*[[${lunchPrice}]]*/ 90),
+        Dinner: Number(/*[[${dinnerPrice}]]*/ 85)
+    };
+
+    const mealType = document.getElementById("mealType");
+    const amount = document.getElementById("amount");
+
+    function updatePrice() {
+        amount.value = prices[mealType.value] ?? 0;
+    }
+
+    mealType.addEventListener("change", updatePrice);
+    updatePrice();
+
+    const studentId = /*[[${student.id}]]*/ 0;
+
     new QRCode(document.getElementById("qrcode"), {
         text: "STUDENT-" + studentId,
-        width: 140,
-        height: 140,
+        width: 150,
+        height: 150,
         colorDark: "#163c2b",
         colorLight: "#ffffff"
     });
 </script>
+
 </body>
 </html>

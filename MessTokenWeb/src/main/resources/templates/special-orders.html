@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Orders | Mess Token System</title>
+    <link rel="stylesheet" href="/style.css">
+
+    <style>
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .heading { margin-bottom: 30px; }
+        .heading p { color: #777; }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 22px;
+        }
+
+        .food-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .food-card:hover { transform: translateY(-4px); }
+        .food-icon { font-size: 42px; }
+
+        .food-card p {
+            color: #777;
+            font-size: 14px;
+            min-height: 38px;
+        }
+
+        .price {
+            font-size: 23px;
+            font-weight: bold;
+            color: #198754;
+            margin: 16px 0;
+        }
+
+        .stock {
+            display: inline-block;
+            background: #eaf7ef;
+            color: #198754;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .order-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #198754;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .order-btn:hover { background: #146c43; }
+
+        .notice {
+            background: #fff8e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 25px;
+            color: #765b17;
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+
+<body>
+<p th:if="${result != null}"
+   th:text="${result}"
+   style="padding:12px; background:#e8f5e9; border-radius:8px; font-weight:bold;">
+</p>
+
+<header>
+    <div style="display:flex;align-items:center;gap:12px;">
+        <img src="/logo.png" alt="Mess Token System logo"
+             style="height:42px;border-radius:8px;">
+        <span>Special Orders</span>
+    </div>
+
+    <a th:href="@{/dashboard(id=${student.id})}">Back to Dashboard</a>
+
+</header>
+
+<main class="container">
+
+    <div class="heading">
+        <h1>🍕 Special Food Orders</h1>
+        <p>Enjoy your favourite snacks! Daily quantities are limited.</p>
+    </div>
+
+    <div class="food-grid">
+
+        <div class="food-card">
+            <div class="food-icon">🍜</div>
+            <h2>Special Maggi</h2>
+            <p>Hot and delicious masala Maggi.</p>
+            <div class="price">₹100</div>
+            <div class="stock">Limited daily stock</div>
+            <form th:action="@{/special-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Maggi">
+                <button class="order-btn" type="submit">Order Maggi</button>
+            </form>
+        </div>
+
+        <div class="food-card">
+            <div class="food-icon">🍝</div>
+            <h2>Veg Noodles</h2>
+            <p>Stir-fried noodles with vegetables.</p>
+            <div class="price">₹160</div>
+            <div class="stock">Limited daily stock</div>
+            <form th:action="@{/special-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Noodles">
+                <button class="order-btn" type="submit">Order Noodles</button>
+            </form>
+        </div>
+
+        <div class="food-card">
+            <div class="food-icon">🍕</div>
+            <h2>Cheese Pizza</h2>
+            <p>Cheesy pizza topped with delicious vegetables.</p>
+            <div class="price">₹180</div>
+            <div class="stock">Limited daily stock</div>
+            <form th:action="@{/special-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Pizza">
+                <button class="order-btn" type="submit">Order Pizza</button>
+            </form>
+        </div>
+
+        <div class="food-card">
+            <div class="food-icon">🍚</div>
+            <h2>Veg Fried Rice</h2>
+            <p>Flavourful fried rice with fresh vegetables.</p>
+            <div class="price">₹140</div>
+            <div class="stock">Limited daily stock</div>
+            <form th:action="@{/special-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Fried Rice">
+                <button class="order-btn" type="submit">Order Fried Rice</button>
+            </form>
+        </div>
+
+        <div class="food-card">
+            <div class="food-icon">🥡</div>
+            <h2>Veg Manchurian</h2>
+            <p>Crispy vegetable balls tossed in spicy sauce.</p>
+            <div class="price">₹120</div>
+            <div class="stock">Limited daily stock</div>
+            <form th:action="@{/special-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Manchurian">
+                <button class="order-btn" type="submit">Order Manchurian</button>
+            </form>
+        </div>
+
+        <div class="food-card">
+            <div class="food-icon">🥟</div>
+            <h2>Veg Momos</h2>
+            <p>Soft vegetable momos served with spicy chutney.</p>
+            <div class="price">₹100</div>
+            <div class="stock">Limited daily stock</div>
+            <form th:action="@{/special-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="Momos">
+                <button class="order-btn" type="submit">Order Momos</button>
+            </form>
+        </div>
+
+        <div class="food-card">
+            <div class="food-icon">🍟</div>
+            <h2>French Fries</h2>
+            <p>Crispy golden fries with seasoning.</p>
+            <div class="price">₹90</div>
+            <div class="stock">Limited daily stock</div>
+            <form th:action="@{/special-orders}" method="post">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="hidden" name="food" value="French Fries">
+                <button class="order-btn" type="submit">Order Fries</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="notice">
+        ⚠️ Prices are sample prices. Actual stock, payment and order eligibility
+        must be verified by the backend before an order is confirmed.
+    </div>
+
+</main>
+</body>
+</html>

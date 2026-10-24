@@ -1,42 +1,402 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - Mess Token System</title>
-    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Dashboard | Mess Token System</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f5f1;
+            color: #193c2d;
+        }
+
+        header {
+            background: linear-gradient(120deg, #123c2b, #2e7d5a);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        header img {
+            width: 42px;
+            height: 42px;
+            object-fit: cover;
+            border-radius: 9px;
+        }
+
+        .brand {
+            flex: 1;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        button, input { font: inherit; }
+
+        .hamburger {
+            background: transparent;
+            color: white;
+            font-size: 24px;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .profile {
+            width: 46px;
+            height: 46px;
+            min-width: 46px;
+            padding: 0;
+            border: 2px solid white;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #e6d5a5;
+            color: #193c2d;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 0;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 28px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            background: linear-gradient(120deg, #164b35, #2e805c);
+            color: white;
+            padding: 28px;
+            border-radius: 18px;
+            margin-bottom: 22px;
+        }
+
+        .welcome h1 {
+            margin: 0 0 8px;
+            font-size: 27px;
+        }
+
+        .welcome p {
+            margin: 0;
+            color: #e0eee5;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 18px #193c2d0c;
+        }
+
+        .card p {
+            color: #718078;
+            font-size: 14px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 21px;
+        }
+
+        .stats h2 {
+            overflow-wrap: anywhere;
+            font-size: 22px;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #d7e1d9;
+            border-radius: 8px;
+        }
+
+        .submit {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border: 0;
+            border-radius: 8px;
+            background: #206847;
+            color: white;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #0006;
+            z-index: 5;
+        }
+
+        .overlay.open { display: block; }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: -270px;
+            width: 260px;
+            background: #153d2c;
+            z-index: 6;
+            padding-top: 55px;
+            transition: left .2s;
+        }
+
+        .side-menu.open { left: 0; }
+
+        .side-menu button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            color: white;
+            border: 0;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .side-menu a {
+            display: block;
+            padding: 16px 22px;
+            color: #e0eee5;
+            text-decoration: none;
+        }
+
+        .side-menu a:hover { background: #286747; }
+
+        .profile-card {
+            display: none;
+            position: absolute;
+            top: 75px;
+            right: 5%;
+            z-index: 8;
+            width: 280px;
+            max-width: 90vw;
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px #0002;
+        }
+
+        .profile-card.open { display: block; }
+
+        .profile-card p {
+            overflow-wrap: anywhere;
+            color: #193c2d;
+        }
+
+        .profile-card input { font-size: 12px; }
+
+        .logout {
+            display: block;
+            margin-top: 15px;
+            padding: 10px;
+            text-align: center;
+            background: #a93226;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 650px) {
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .welcome h1 { font-size: 23px; }
+            .brand { font-size: 17px; }
+
+            main {
+                margin-top: 18px;
+                padding: 0 12px;
+            }
+
+            .card { padding: 18px; }
+        }
+    </style>
+
 </head>
+
 <body>
+
 <header>
-    <div style="display:flex; align-items:center; gap:12px;">
-        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
-        <span>Mess Token System</span>
-    </div>
-    <a href="/login">Logout</a>
+    <button class="hamburger" onclick="menu(true)">☰</button>
+    <img src="/logo.png" alt="Logo">
+    <div class="brand">Mess Token System</div>
+
+    <button class="profile" id="profileBtn"
+            onclick="profile()"
+            th:text="${#strings.substring(student.name, 0, 1)}">K</button>
+
 </header>
 
-<div class="container">
-    <div class="card">
-        <h2 th:text="'Welcome, ' + ${student.name}">Welcome</h2>
-        <div class="balance-row"><span>Total Tokens</span><span th:text="${student.totalBalance} + ' tokens'"></span></div>
-        <div class="balance-row"><span>Monthly Limit</span><span th:text="${student.monthlyLimit} + ' tokens/month'"></span></div>
-        <div class="balance-row"><span>Monthly Used</span><span th:text="${student.monthlyUsed} + ' tokens'"></span></div>
+<div class="overlay" id="overlay" onclick="menu(false)"></div>
+
+<nav class="side-menu" id="sideMenu">
+    <button onclick="menu(false)">✕</button>
+
+    <div style="padding: 15px 22px 22px; color: white; border-bottom: 1px solid #ffffff25; margin-bottom: 8px;">
+        <h2 style="margin: 0 0 6px; font-size: 21px;">🌿 SideMenu</h2>
     </div>
 
-    <div class="card">
-        <h2>Pay Yearly Fees</h2>
+    <a th:href="@{/dashboard(id=${student.id})}">🏠 Dashboard</a>
+    <a th:href="@{/menu(id=${student.id})}">🍽️ Weekly Menu</a>
+    <a th:href="@{/scan(id=${student.id})}">📷 Scan &amp; Pay</a>
+    <a th:href="@{/preorder(id=${student.id})}">🥗 Preorder Meals</a>
+    <a th:href="@{/special-orders(id=${student.id})}">🍜 Special Orders</a>
+    <a th:href="@{/diet-orders(id=${student.id})}">🥗 Diet Orders</a>
+    <a th:href="@{/history(id=${student.id})}">📜 Transaction History</a>
+    <a href="/login">🚪 Logout</a>
+
+
+</nav>
+
+
+<div class="profile-card" id="profileCard">
+    <h3>My Profile</h3>
+
+    <p><b>Name:</b> <span th:text="${student.name}"></span></p>
+    <p><b>Roll No:</b> <span th:text="${student.rollNo}"></span></p>
+    <p><b>Hostel ID:</b> <span th:text="${student.hostelId}"></span></p>
+    <p><b>Mess ID:</b> <span th:text="${student.messId}"></span></p>
+
+    <label for="photo">Profile Photo</label>
+    <input type="file" id="photo" accept="image/*">
+
+    <button class="submit" type="button" onclick="savePhoto()">Save Photo</button>
+
+    <a class="logout" href="/login">Logout</a>
+
+</div>
+
+<main>
+    <section class="welcome">
+        <h1 th:text="'Welcome back, ' + ${student.name} + '!'">Welcome!</h1>
+        <p>Your mess, your meals, your tokens — all in one place.</p>
+    </section>
+
+    <section class="stats">
+        <div class="card">
+            <p>💰 Total Token Balance</p>
+            <h2 th:text="${#numbers.formatDecimal(student.totalBalance,1,2)}">0.00</h2>
+        </div>
+
+        <div class="card">
+            <p>📅 Monthly Limit</p>
+            <h2 th:text="${#numbers.formatDecimal(student.monthlyLimit,1,2)}">0.00</h2>
+        </div>
+
+        <div class="card">
+            <p>📊 Monthly Used</p>
+            <h2 th:text="${#numbers.formatDecimal(student.monthlyUsed,1,2)}">0.00</h2>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>💳 Pay Yearly Mess Fees</h2>
+
         <form action="/dashboard/payfees" method="post">
             <input type="hidden" name="id" th:value="${student.id}">
-            <label>Yearly Fee (₹) — will convert to Tokens</label>
-            <input type="number" step="0.01" name="yearlyFee" required>
-            <button type="submit">Pay Fees</button>
-        </form>
-    </div>
 
-    <div class="actions">
-        <a th:href="'/scan?id=' + ${student.id}">Scan & Pay</a>
-        <a th:href="'/history?id=' + ${student.id}">Transaction History</a>
-        <a th:href="'/preorder?id=' + ${student.id}">Preorder Meals</a>
-    </div>
-</div>
+            <label for="yearlyFee">Yearly Fee (₹)</label>
+            <input type="number" id="yearlyFee" name="yearlyFee"
+                   min="1" step="0.01" placeholder="Enter yearly fee" required>
+
+            <button class="submit" type="submit">Pay Fees</button>
+        </form>
+    </section>
+
+</main>
+
+<script th:inline="javascript">
+    const studentId = /*[[${student.id}]]*/ 0;
+    const photoKey = 'messProfilePhoto_' + studentId;
+
+    function menu(open) {
+        document.getElementById('sideMenu').classList.toggle('open', open);
+        document.getElementById('overlay').classList.toggle('open', open);
+    }
+
+    function profile() {
+        document.getElementById('profileCard').classList.toggle('open');
+    }
+
+    function showPhoto(src) {
+        const btn = document.getElementById('profileBtn');
+        btn.textContent = '';
+
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = 'Profile';
+        btn.appendChild(img);
+    }
+
+    function savePhoto() {
+        const file = document.getElementById('photo').files[0];
+
+        if (!file) {
+            alert('Please select a photo.');
+            return;
+        }
+
+        if (!file.type.startsWith('image/')) {
+            alert('Select an image file.');
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            try {
+                localStorage.setItem(photoKey, event.target.result);
+                showPhoto(event.target.result);
+                alert('Profile photo saved!');
+            } catch (error) {
+                alert('Photo is too large. Please choose a smaller image.');
+            }
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    const savedPhoto = localStorage.getItem(photoKey);
+
+    if (savedPhoto) {
+        showPhoto(savedPhoto);
+    }
+</script>
+
 </body>
 </html>

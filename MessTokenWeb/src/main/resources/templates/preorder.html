@@ -1,45 +1,166 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Preorder - Mess Token System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preorder | Mess Token System</title>
     <link rel="stylesheet" href="/style.css">
+
+    <style>
+        .preorder-container {
+            max-width: 850px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading p {
+            color: #777;
+        }
+
+        .section-heading {
+            margin: 30px 0 10px;
+        }
+
+        .skip-section {
+            background: #fff;
+            border: 1px solid #e7e7e7;
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+        .meal-option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .meal-option:last-child {
+            border-bottom: none;
+        }
+
+        .meal-option input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .meal-option label {
+            cursor: pointer;
+        }
+
+        .meal-option small {
+            display: block;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .submit-section {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .submit-section button {
+            padding: 13px 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            background: #198754;
+            color: white;
+        }
+
+        .submit-section button:hover {
+            background: #146c43;
+        }
+
+        @media (max-width: 600px) {
+            .preorder-container {
+                padding: 0 14px;
+            }
+        }
+    </style>
+
 </head>
+
 <body>
+
 <header>
     <div style="display:flex; align-items:center; gap:12px;">
-        <img src="/logo.png" alt="logo" style="height:42px; border-radius:8px;">
-        <span>Preorder — Mark Meals You'll Skip</span>
+        <img src="/logo.png" alt="Mess Token System logo"
+             style="height:42px; border-radius:8px;">
+        <span>Food Preorder</span>
     </div>
-    <a th:href="'/dashboard?id=' + ${student.id}">Back to Dashboard</a>
+
+    <a th:href="@{/dashboard(id=${student.id})}">
+        Back to Dashboard
+    </a>
+
 </header>
 
-<div class="container">
-    <div class="card">
-        <h2>Today's Meals</h2>
-        <p>Check the meals you will NOT eat today, so the mess can cook accordingly. Unchecked meals mean you plan to eat.</p>
-        <form action="/preorder" method="post">
+<main class="preorder-container">
+
+    <div class="page-heading">
+        <h1>Regular Meals 🍽️</h1>
+        <p>Select the meals you plan to skip today and help reduce food wastage.</p>
+    </div>
+
+    <section>
+        <h2 class="section-heading">Today's Meal Preferences</h2>
+
+        <form th:action="@{/preorder}" method="post">
             <input type="hidden" name="id" th:value="${student.id}">
 
-            <div class="meal-option">
-                <input type="checkbox" id="b" name="skipMeals" value="Breakfast"
-                       th:checked="${student.skippedMealsToday.contains('Breakfast')}">
-                <label for="b">Skip Breakfast</label>
-            </div>
-            <div class="meal-option">
-                <input type="checkbox" id="l" name="skipMeals" value="Lunch"
-                       th:checked="${student.skippedMealsToday.contains('Lunch')}">
-                <label for="l">Skip Lunch</label>
-            </div>
-            <div class="meal-option">
-                <input type="checkbox" id="d" name="skipMeals" value="Dinner"
-                       th:checked="${student.skippedMealsToday.contains('Dinner')}">
-                <label for="d">Skip Dinner</label>
-            </div>
+            <div class="skip-section">
 
-            <button type="submit">Submit Preferences</button>
+                <div class="meal-option">
+                    <input type="checkbox" id="breakfast"
+                           name="skipMeals" value="Breakfast"
+                           th:checked="${student.skippedMealsToday.contains('Breakfast')}">
+
+                    <label for="breakfast">
+                        <strong>Breakfast</strong>
+                        <small>7:30 AM – 9:00 AM</small>
+                    </label>
+                </div>
+
+                <div class="meal-option">
+                    <input type="checkbox" id="lunch"
+                           name="skipMeals" value="Lunch"
+                           th:checked="${student.skippedMealsToday.contains('Lunch')}">
+
+                    <label for="lunch">
+                        <strong>Lunch</strong>
+                        <small>12:00 PM – 2:00 PM</small>
+                    </label>
+                </div>
+
+                <div class="meal-option">
+                    <input type="checkbox" id="dinner"
+                           name="skipMeals" value="Dinner"
+                           th:checked="${student.skippedMealsToday.contains('Dinner')}">
+
+                    <label for="dinner">
+                        <strong>Dinner</strong>
+                        <small>7:00 PM – 9:00 PM</small>
+                    </label>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit">Save Meal Preferences</button>
+                </div>
+
+            </div>
         </form>
-    </div>
-</div>
+    </section>
+
+</main>
+
 </body>
 </html>
