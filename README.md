@@ -1,72 +1,114 @@
-# 🍽 Mess Token System
+# 🍽️ Mess Token System
 
-A full-stack Java web application that solves a common hostel/college mess problem: students pay a fixed mess fee but lose money whenever they skip a meal — and the mess cooks a fixed quantity regardless of actual turnout, causing food wastage. This system converts mess fees into a **token-based wallet with a monthly spending cap**, so unused tokens are never wasted, and adds a **meal preorder feature** so the mess always knows exactly how much food to prepare.
+A full-stack Java web application designed to make hostel mess management smarter and reduce food wastage. The system provides students with a token-based wallet, meal preordering, special food ordering, diet food options, and transaction tracking. Mess staff can monitor meal attendance and skipped meals to plan food preparation more efficiently.
 
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![Thymeleaf](https://img.shields.io/badge/Thymeleaf-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white)
-![H2 Database](https://img.shields.io/badge/H2%20Database-0E76A8?style=for-the-badge&logo=databricks&logoColor=white)
-![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
+## 🛠️ Tech Stack
+
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge\&logo=openjdk\&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge\&logo=springboot\&logoColor=white)
+![Thymeleaf](https://img.shields.io/badge/Thymeleaf-005F0F?style=for-the-badge\&logo=thymeleaf\&logoColor=white)
+![H2 Database](https://img.shields.io/badge/H2%20Database-0E76A8?style=for-the-badge\&logo=databricks\&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge\&logo=apachemaven\&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge\&logo=html5\&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge\&logo=css3\&logoColor=white)
 
 ---
 
-## 📌 The Problem
+## 📌 Problem Statement
 
-- Students who stay up late studying miss breakfast; students with afternoon classes miss lunch — multiple times every month — and that already-paid-for meal money is simply lost.
-- When food isn't tasty, students skip meals in groups without warning the mess, which keeps cooking fixed quantities. The surplus food is wasted.
+Traditional mess systems often prepare fixed quantities of food without knowing how many students will actually eat. Students who skip meals may also lose the value of their prepaid meals, while excess food leads to unnecessary wastage.
 
-## 💡 The Solution
+## 💡 Our Solution
 
-A token-based wallet (₹1 = 1 token) with a **monthly spending cap** (yearly fee ÷ 12), so tokens can never all be spent in one month — and tokens from skipped meals automatically stay safe for later use. A **preorder system** lets students mark meals they'll skip, giving the mess real-time visibility into actual demand.
+The Mess Token System introduces a digital token wallet and a meal management platform. Students can manage their balances, preorder or skip meals, explore food options, and view their transaction history. Mess staff can use meal summaries to better understand student attendance and reduce food wastage.
 
 ---
 
 ## ✨ Features
 
-| Feature | Description |
-|---|---|
-| 🏠 **Home Page** | Landing page with separate Student and Mess Staff portals |
-| 👤 **Student Signup/Login** | Secure registration and authentication per student |
-| 💰 **Token Wallet** | Yearly fee converts to tokens with an auto-calculated monthly spending limit |
-| 📷 **Scan & Pay** | QR-code based payment simulation, password-protected before every transaction |
-| 📜 **Transaction History** | Full, timestamped log of all credits and debits |
-| 🍽️ **Preorder / Meal Cancellation** | Students mark meals they'll skip to reduce food wastage |
-| 🧑‍🍳 **Mess Staff Portal** | Separate login showing a live summary of confirmed vs. skipped meals |
-| 🔒 **Mess Restriction** | Tokens are only usable at a student's assigned mess |
+### 👨‍🎓 Student Portal
+
+* **Student Signup & Login:** Individual student accounts.
+* **Personal Dashboard:** View token balance, monthly spending limit, and monthly usage.
+* **Profile Photo:** Set a profile photo for the student dashboard.
+* **Token Wallet:** Manage mess tokens and track spending.
+* **Pay Yearly Mess Fees:** Enter yearly mess fees through the dashboard.
+* **Scan & Pay:** Meal payment interface with transaction validation.
+* **Transaction History:** View recorded wallet transactions.
+* **Weekly Menu:** Explore the available mess menu.
+* **Meal Preordering:** Mark breakfast, lunch, or dinner as skipped.
+* **Special Food Orders:** Order items such as Maggi, noodles, pizza, momos, and more.
+* **Diet Food Orders:** Explore options such as fruit bowls, oats, salads, and boiled eggs.
+* **Balance & Spending Validation:** Check available balance and monthly spending limits before orders or payments.
+
+### 🧑‍🍳 Mess Staff Portal
+
+* Separate mess staff login.
+* View the number of students expected to eat.
+* View skipped meal counts.
+* Access meal attendance summaries for improved food planning.
+
+### 🔐 Data & Validation
+
+* Student-specific account information.
+* Mess ID validation for meal payments.
+* Stock and balance checks for special and diet orders.
+* Database-backed student information using Spring Data JPA.
 
 ---
 
-## 🛠 Tech Stack
+## 🛠️ Project Architecture
 
-- **Backend:** Java, Spring Boot (Controller–Service–Repository architecture)
-- **Frontend:** Thymeleaf, HTML5, CSS3
-- **Database:** H2 (file-based, via Spring Data JPA)
-- **Build Tool:** Maven
-- **QR Code:** QRCode.js
+The application follows a Controller–Service–Repository architecture:
+
+* **Controller:** Handles HTTP requests and application navigation.
+* **Service:** Contains business logic, payment validation, and meal operations.
+* **Repository:** Communicates with the database using Spring Data JPA.
+* **Entity:** Represents application data stored in the database.
+* **Thymeleaf Templates:** Render dynamic web pages.
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Java JDK 17+
-- Maven (or use the included `mvnw` wrapper)
-- IntelliJ IDEA (recommended) or any Java IDE
 
-### Run Locally
+* Java JDK 17 or later
+* Maven, or the included Maven Wrapper
+* IntelliJ IDEA or another Java IDE
 
-```bash
-# Clone the repository
+### Installation
+
+**1. Clone the repository**
+
+```
 git clone https://github.com/karunachaudhary2112/Mess-Token-System.git
+```
 
-# Navigate into the project
+**2. Navigate to the application directory**
+
+```
 cd Mess-Token-System/MessTokenWeb
+```
 
-# Run the application
+**3. Run the application**
+
+On Windows:
+
+```
+.\mvnw.cmd spring-boot:run
+```
+
+On Linux or macOS:
+
+```
 ./mvnw spring-boot:run
 ```
 
-Then open your browser at:
+**4. Open the application**
+
+Visit:
+
 ```
 http://localhost:8080
 ```
@@ -76,34 +118,51 @@ http://localhost:8080
 ## 📂 Project Structure
 
 ```
-MessTokenWeb/
-└── src/main/
-    ├── java/MessTokenWeb/
-    │   ├── Student.java              # JPA entity
-    │   ├── StudentRepository.java    # Database layer
-    │   ├── StudentService.java       # Core wallet/business logic
-    │   ├── StudentController.java    # Student-facing routes
-    │   ├── MessController.java       # Mess staff routes
-    │   └── MessTokenWebApplication.java
-    └── resources/
-        ├── templates/                # Thymeleaf HTML pages
-        ├── static/                   # CSS, logo, images
-        └── application.properties    # Database configuration
+Mess-Token-System/
+└── MessTokenWeb/
+    └── src/
+        └── main/
+            ├── java/MessTokenWeb/
+            │   ├── Student.java
+            │   ├── StudentRepository.java
+            │   ├── StudentService.java
+            │   ├── StudentController.java
+            │   ├── MenuController.java
+            │   ├── MenuService.java
+            │   ├── MenuItem.java
+            │   ├── MenuRepository.java
+            │   ├── MealAvailability.java
+            │   ├── MealAvailabilityRepository.java
+            │   ├── MessController.java
+            │   └── MessTokenWebApplication.java
+            └── resources/
+                ├── templates/
+                ├── static/
+                └── application.properties
 ```
+
+*Note: The structure above highlights key files. Other classes and resources may also be present.*
 
 ---
 
-## 🔮 Future Scope
+## 🔮 Future Enhancements
 
-- Migrate from H2 to MySQL/PostgreSQL for production deployment
-- Real QR/RFID hardware integration at mess counters
-- Admin panel for managing multiple messes
-- Automated monthly reset of spending limits and preorder status
-- Deploy as a live, publicly accessible website
+* Secure password hashing and improved authentication.
+* Store profile photos persistently per student.
+* Add administrative tools for managing students, messes, and menu items.
+* Improve stock management for special and diet food orders.
+* Automate monthly spending limit resets.
+* Integrate real QR-code scanning and payment systems.
+* Deploy the application to a cloud platform.
 
 ---
 
 ## 👩‍💻 Author
 
 **Karuna Chaudhary**
-Built as a college project — a complete full-stack Java application from problem statement to deployment.
+
+Built as a college project to explore full-stack Java development, Spring Boot, database integration, and practical solutions for hostel mess management.
+
+---
+
+⭐ If you find this project interesting, consider giving the repository a star!
