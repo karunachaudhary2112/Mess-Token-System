@@ -130,9 +130,6 @@ Mess-Token-System/
             │   ├── MenuController.java
             │   ├── MenuService.java
             │   ├── MenuItem.java
-            │   ├── MenuRepository.java
-            │   ├── MealAvailability.java
-            │   ├── MealAvailabilityRepository.java
             │   ├── MessController.java
             │   └── MessTokenWebApplication.java
             └── resources/
